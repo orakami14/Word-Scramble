@@ -1,103 +1,105 @@
-var words = [
-    "apple",
-    "banana", 
-    "orange", 
-    "pineapple",
-    "guava", 
-    "avocado", 
-    "mango",
-    "peach", 
-    "grapes", 
-    "Watermelon",
-    "Dragon fruit",
-    "Strawberry", 
-    "Blueberry", 
-    "Blackberry",
-    "Gooseberry", 
-    "Cherry", 
-    "Jackfruit",
-    "Lime", 
-    "Kiwifruit", 
-    "Pear",
+const words = [
+   'apple',
+   'banana',
+   'cherry',
+   'grape',
+   'kiwi',
+   'lemon',
+   'mango',
+   'orange',
+   'pineapple',
+   'strawberry',
+   'dragon fruit',
+   'pear',
+   'jackfruit',
+   'watermelon',
+   'peach',
 
-    
-];
-
-
-var currentWordIndex = 0;
-var scrambleWord = "";
-var timer;
-var score = 0;
-
-function displayWord() {
-    $("#word").text(scrambleWord);
-}
-
-function scrambledWord(word) {
-    return word
-   .split("")
-   .sort(function () {
-        return 0.5 - Math.random();
-    })
-   .join("");
-}
-
-function checkword(){
-    var inputWord = $("#inputWord").val().trim().toLowerCase();
-    if(inputWord === words[currentWordIndex]){
-        clearInterval(timer);
-        $(".error").text("correct");
-        score++;
-        $("#score").text(score);
-        nextWord();
-        $(".error").addClass("d-none");
-    } else{
-        $(".error").removeClass("d-none");
-        $(".error").text("Incorrect try again");
-    }
-}
-
-function nextWord(){
-    clearInterval(timer);
-    currentWordIndex = (currentWordIndex + 1) % words.length;
-    scrambleWord = scrambledWord(words[currentWordIndex]);
-    $("#inputWord").val("");
-    $(".error").text("");
-    displayWord();
-    startTimer();
-}
-
-function startTimer(){
-    var seconds = 10;
-    $("#time").text(seconds);
-
-    timer = setInterval(function(){
-        seconds--;
-        $("#time").text(seconds);
-        if(seconds <= 0){
-            clearInterval(timer);
-            $(".error").text("Time out"); 
-            $("#score").text("Total score: " + score);
-        }
-    }, 1000);
+ ];
+ 
+ const wordElement = document.querySelector('#word');
+ const inputWord = document.querySelector('#inputWord');
+ const error = document.querySelector('.error');
+ const scoreElement = document.querySelector('#score');
+ const checkBtn = document.querySelector('#check');
+ const refreshBtn = document.querySelector('#refresh');
+ const timeElement = document.querySelector('#time');
+ 
+ let score = 0;
+ let timeLeft = 30;
+ let timerId;
+ let currentWord;
+ 
+ function scrambleWord(word) {
+   const chars = word.split('');
+ for (let i = chars.length - 1; i > 0; i--) {
+     const j = Math.floor(Math.random() * (i + 1));
+     [chars[i], chars[j]] = [chars[j], chars[i]];
+   }
+   return chars.join('');
  }
-
-$(document).ready(function () {
-    scrambleWord = scrambledWord(words[currentWordIndex]);
-    displayWord();
-    startTimer();   
-    
-    $("#check").click(function () {
-        checkword();
-    });
-    $("#refresh").click(function () {
-        score = 0;
-        $("#score").text("0");
-        nextWord();
-    });
-    $("#inputWord").keyup(function (event) {
-        if(event.keyCode === 13) {
-            checkword();
-        }
-    });
- });
+ 
+ function getNewWord() {
+   const randomIndex = Math.floor(Math.random() * words.length);
+   currentWord = words[randomIndex];
+   const scrambledWord = scrambleWord(currentWord);
+   wordElement.textContent = scrambledWord;
+ }
+ 
+ function checkWord() {
+   const enteredWord = inputWord.value.toLowerCase();
+   const correctWord = currentWord.toLowerCase();
+ 
+   if (enteredWord === correctWord) {
+     score += 2;
+     scoreElement.textContent = score;
+     error.textContent = '';
+     inputWord.value = '';
+     wordElement.textContent = currentWord;
+     setTimeout(() => {
+       getNewWord();
+     }, 1000);
+     alert(`Correct! The word was ${currentWord}.`);
+   } else {
+     error.textContent = 'Wrong word!';
+     inputWord.value = '';
+   }
+ }
+ 
+ function startTimer() {
+   timeLeft = 30;
+   timeElement.textContent = timeLeft;
+   timerId = setInterval(() => {
+     timeLeft--;
+     timeElement.textContent = timeLeft;
+ 
+     if (timeLeft === 0) {
+       clearInterval(timerId);
+       timeElement.textContent = 'Time is up!';
+       inputWord.disabled = true;
+       checkBtn.disabled = true;
+       refreshBtn.disabled = false;
+     }
+   }, 1000);
+ }
+ 
+ function refreshGame() {
+   score = 0;
+   scoreElement.textContent = score;
+   clearInterval(timerId);
+   timeLeft = 60;
+   timeElement.textContent = timeLeft;
+   inputWord.disabled = false;
+   checkBtn.disabled = false;
+   refreshBtn.disabled = false;
+   getNewWord();
+   inputWord.value = '';
+   error.textContent = '';
+   startTimer();
+ }
+ 
+ checkBtn.addEventListener('click', checkWord);
+ refreshBtn.addEventListener('click', refreshGame);
+ 
+ getNewWord();
+ startTimer();
