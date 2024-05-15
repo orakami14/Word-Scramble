@@ -4,23 +4,34 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <title>Student Manegement</title>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Student Management</title>
   </head>
   <body>
-    <div class="heading">
-        <h1>School Attendence System</h1>
-    </div>
+    <header class="heading">
+        <h1>School Attendance System</h1>
+    </header>
     <p class="school"> University of the Visayas</p>  
-        <div class="right">
-            <h2 class="login_head">Student Login</h2>
-            <form action="" id="form">
-                <input type="text" id="name" placeholder="username">
-                <input type="password" id="password" placeholder="Password">
-                    <input type="submit" class="btn btn-warning" id="submit" value="Submit">
-            </form>
-        </div>
-    </div>
+    <main class="right">
+        <h2 class="login_head">Student Login</h2>
+        <form action="" id="loginForm" novalidate>
+            <input type="text" id="username" placeholder="username" required autofocus>
+            <input type="password" id="password" placeholder="Password" minlength="8" required>
+            <input type="submit" class="btn btn-warning" id="submit" value="Submit">
+        </form>
+        <button class="btn btn-danger" id="logout">Logout</button>
+    </main>
+    <main class="left" id="registerSection" style="display:none;">
+        <h2 class="register_head">Student Registration</h2>
+        <form action="" id="registerForm" novalidate>
+            <input type="text" id="registerUsername" placeholder="username" required autofocus>
+            <input type="email" id="registerEmail" placeholder="Email" required>
+            <input type="password" id="registerPassword" placeholder="Password" minlength="8" required>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" minlength="8" required>
+            <input type="submit" class="btn btn-warning" id="registerSubmit" value="Submit">
+        </form>
+        <p class="login_link">Already have an account? <a href="#" id="loginLink">Login here</a></p>
+    </main>
     <script src="index.js"></script>
   </body>
 </html>
