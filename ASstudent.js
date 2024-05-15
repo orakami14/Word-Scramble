@@ -1,65 +1,36 @@
-document = document.getElementById("form1").addEventListener("submit", submitFun1);
+// Handle student form submission
+const logoutButton = document.getElementById('logout');
+studentForm.addEventListener('submit', (event) => {
+  event.preventDefault();
 
-var studentDataArr =JSON.parse(localStorage.getItem("studentData"))|| [];
-function submitFun1(e) {
-    document.querySelector("#tbody").innerHTML = "";
-    e.preventDefault();
-    var name = document.querySelector("#name").value;
-    var number = document.querySelector("#number").value;
-    var city = document.querySelector("#city").value;
-    
+  // Get the student data from the form inputs
+  const name = studentForm.elements['name'].value;
+  const number = studentForm.elements['number'].value;
+  const city = studentForm.elements['city'].value;
 
-    var studentObj = {
-        name: name,
-        number: number,
-        city: city,
-      
-    }
+  // Add the student data to the table body
+  const studentRow = document.createElement('tr');
+  studentRow.innerHTML = `
+    <td>${number}</td>
+    <td>${name}</td>
+    <td>${number}</td>
+    <td>${city}</td>
+    <td>Present</td>
+    <td>${new Date().toLocaleString()}</td>
+  `;
+  document.getElementById('studentTableBody').appendChild(studentRow);
 
-    studentDataArr.push(studentObj);
-    localStorage.setItem("studentData", JSON.stringify(studentDataArr));
-    document.querySelector("#form1").reset();
-    alert("Student Added Successfully");
+  // Clear the form inputs
+  studentForm.reset();
+});
 
-    displayFun(studentDataArr)
-}
-
-function displayFun(studentDataArr) {
-
-    var count = 1;
-    studentDataArr.map(function (item) {
-    
-        var tr = document.createElement("tr");
-
-        var td1 = document.createElement("td");
-        td1.innerHTML = count++
-        var td2 = document.createElement("td");
-        td2.innerHTML = item.name;
-        var td3 = document.createElement("td");
-        td3.innerHTML = item.number;
-        var td4 = document.createElement("td");
-        td4.innerHTML = item.city;
-        var td5 = document.createElement("td");
-        var btn1 = document.createElement("button");
-        btn1.innerHTML = "P";
-        btn1.addEventListener("click", function () {
-            td6.innerHTML = "<button >Present</button>";
-        });
-        var btn2 = document.createElement("button");
-        btn2.innerHTML = "A";
-        btn2.addEventListener("click", function () {
-            td6.innerHTML = "<button id='absent'>Absent</button>";
-        
-        });
-        td6.classList.add("td6");
-        td6.append(btn1, btn2);
-
-        tr.append(td1, td2, td3, td4, td5, td6);
-
-        document.querySelector("#tbody").append(tr);
-
-    });
-
-
-}
-displayFun(studentDataArr);
+logoutButton.addEventListener('click', () => {
+    // Clear the student data from the table body
+    document.getElementById('studentTableBody').innerHTML = '';
+  
+    // Clear the form inputs
+    studentForm.reset();
+  
+    // Redirect the user to the login page
+    window.location.href = 'index.html';
+  });
